@@ -15,6 +15,7 @@ package org.openmetadata.service;
 
 import static org.openmetadata.service.security.SecurityUtil.tryCreateOidcClient;
 
+import com.alibaba.nacos.api.exception.NacosException;
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
@@ -68,6 +69,7 @@ import org.openmetadata.schema.api.security.ClientType;
 import org.openmetadata.schema.services.connections.metadata.AuthProvider;
 import org.openmetadata.service.apps.ApplicationHandler;
 import org.openmetadata.service.apps.scheduler.AppScheduler;
+import org.openmetadata.service.config.NacosServiceDiscovery;
 import org.openmetadata.service.config.OMWebBundle;
 import org.openmetadata.service.config.OMWebConfiguration;
 import org.openmetadata.service.events.EventFilter;
@@ -136,7 +138,7 @@ public class OpenMetadataApplication extends Application<OpenMetadataApplication
 
   @Override
   public void run(OpenMetadataApplicationConfig catalogConfig, Environment environment)
-      throws ClassNotFoundException,
+          throws ClassNotFoundException,
           IllegalAccessException,
           InstantiationException,
           NoSuchMethodException,
@@ -145,8 +147,11 @@ public class OpenMetadataApplication extends Application<OpenMetadataApplication
           ConfigurationException,
           CertificateException,
           KeyStoreException,
-          NoSuchAlgorithmException {
+          NoSuchAlgorithmException, NacosException {
     validateConfiguration(catalogConfig);
+
+    NacosServiceDiscovery nacosServiceDiscovery = new NacosServiceDiscovery(catalogConfig.getNacosConfig());
+    environment.lifecycle().manage(nacosServiceDiscovery);
 
     // Instantiate incident severity classifier
     IncidentSeverityClassifierInterface.createInstance();

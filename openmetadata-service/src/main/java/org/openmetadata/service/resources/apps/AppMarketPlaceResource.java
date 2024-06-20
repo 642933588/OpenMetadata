@@ -498,7 +498,7 @@ public class AppMarketPlaceResource
       }
     } else {
       PipelineServiceClientResponse response = pipelineServiceClient.validateAppRegistration(app);
-      if (response.getCode() != 200) {
+      if (response != null && response.getCode() != 200) {
         throw new BadRequestException(
             String.format(
                 "Application Cannot be registered, Error from Pipeline Service Client. Status Code : %s , Reponse : %s",

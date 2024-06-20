@@ -14,6 +14,10 @@ clusterName: ${OPENMETADATA_CLUSTER_NAME:-openmetadata}
 swagger:
   resourcePackage: org.openmetadata.service.resources
 
+nacos:
+  serverAddr: ${NACOS_SERVER_ADDR}
+  namespace: ${NACOS_NAMESPACE}
+
 
 server:
   rootPath: '/api/*'
