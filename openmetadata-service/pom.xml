@@ -39,11 +39,15 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.ruoyi</groupId>
+      <artifactId>ruoyi-common-security</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.pac4j</groupId>
       <artifactId>pac4j-core</artifactId>
       <version>${pac4j.version}</version>
       <exclusions>
-        <exclusion>        
+        <exclusion>
           <groupId>org.slf4j</groupId>
           <artifactId>slf4j-api</artifactId>
         </exclusion>
@@ -426,7 +430,7 @@
       <artifactId>json</artifactId>
       <version>20231013</version>
     </dependency>
-    
+
     <dependency>
       <groupId>com.networknt</groupId>
       <artifactId>json-schema-validator</artifactId>

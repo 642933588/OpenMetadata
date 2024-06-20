@@ -13,10 +13,6 @@
 
 package org.openmetadata.service.security;
 
-import static org.openmetadata.common.utils.CommonUtil.nullOrEmpty;
-import static org.openmetadata.service.security.jwt.JWTTokenGenerator.ROLES_CLAIM;
-import static org.openmetadata.service.security.jwt.JWTTokenGenerator.TOKEN_TYPE;
-
 import com.auth0.jwk.Jwk;
 import com.auth0.jwk.JwkProvider;
 import com.auth0.jwt.JWT;
@@ -27,27 +23,32 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
-import java.net.URL;
-import java.security.interfaces.RSAPublicKey;
-import java.util.*;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.ext.Provider;
+import com.ruoyi.common.core.constant.SecurityConstants;
+import com.ruoyi.common.core.utils.JwtUtils;
+import io.jsonwebtoken.Claims;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.openmetadata.schema.api.security.AuthenticationConfiguration;
 import org.openmetadata.schema.api.security.AuthorizerConfiguration;
 import org.openmetadata.schema.auth.LogoutRequest;
-import org.openmetadata.schema.auth.ServiceTokenType;
 import org.openmetadata.schema.services.connections.metadata.AuthProvider;
 import org.openmetadata.service.security.auth.BotTokenCache;
 import org.openmetadata.service.security.auth.CatalogSecurityContext;
 import org.openmetadata.service.security.auth.UserTokenCache;
 import org.openmetadata.service.security.saml.JwtTokenCacheManager;
+
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.ext.Provider;
+import java.net.URL;
+import java.security.interfaces.RSAPublicKey;
+import java.util.*;
+
+import static org.openmetadata.common.utils.CommonUtil.nullOrEmpty;
 
 @Slf4j
 @Provider
@@ -136,26 +137,24 @@ public class JwtFilter implements ContainerRequestFilter {
     LOG.debug("Token from header:{}", tokenFromHeader);
 
     // the case where OMD generated the Token for the Client
-    if (AuthProvider.BASIC.equals(providerType) || AuthProvider.SAML.equals(providerType)) {
-      validateTokenIsNotUsedAfterLogout(tokenFromHeader);
-    }
+//    if (AuthProvider.BASIC.equals(providerType) || AuthProvider.SAML.equals(providerType)) {
+//      validateTokenIsNotUsedAfterLogout(tokenFromHeader);
+//    }
 
-    DecodedJWT jwt = validateAndReturnDecodedJwtToken(tokenFromHeader);
+//    DecodedJWT jwt = validateAndReturnDecodedJwtToken(tokenFromHeader);
+//
 
-    Map<String, Claim> claims = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    claims.putAll(jwt.getClaims());
 
-    String userName = validateAndReturnUsername(claims);
+    String userName = JwtUtils.getUserName(tokenFromHeader);
+    Claims claims = JwtUtils.parseToken(tokenFromHeader);
+
 
     Set<String> userRoles = new HashSet<>();
     boolean isBot =
-        claims.containsKey(BOT_CLAIM) && Boolean.TRUE.equals(claims.get(BOT_CLAIM).asBoolean());
+        claims.containsKey(BOT_CLAIM) && Boolean.TRUE.equals(Boolean.parseBoolean(JwtUtils.getValue(claims,BOT_CLAIM)));
     // Re-sync user roles from token
-    if (useRolesFromProvider && !isBot && claims.containsKey(ROLES_CLAIM)) {
-      List<String> roles = claims.get(ROLES_CLAIM).asList(String.class);
-      if (!nullOrEmpty(roles)) {
-        userRoles = new HashSet<>(claims.get(ROLES_CLAIM).asList(String.class));
-      }
+    if (useRolesFromProvider && !isBot && claims.containsKey(SecurityConstants.ROLE_PERMISSION)) {
+      userRoles = (Set<String>) claims.get(SecurityConstants.ROLE_PERMISSION);
     }
 
     // validate bot token
@@ -164,10 +163,10 @@ public class JwtFilter implements ContainerRequestFilter {
     }
 
     // validate access token
-    if (claims.containsKey(TOKEN_TYPE)
-        && ServiceTokenType.PERSONAL_ACCESS.value().equals(claims.get(TOKEN_TYPE).asString())) {
-      validatePersonalAccessToken(tokenFromHeader, userName);
-    }
+//    if (claims.containsKey(TOKEN_TYPE)
+//        && ServiceTokenType.PERSONAL_ACCESS.value().equals(claims.get(TOKEN_TYPE).asString())) {
+//      validatePersonalAccessToken(tokenFromHeader, userName);
+//    }
 
     // Setting Security Context
     CatalogPrincipal catalogPrincipal = new CatalogPrincipal(userName);

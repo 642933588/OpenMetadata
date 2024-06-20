@@ -255,8 +255,9 @@ module.exports = {
     // Proxy configuration
     proxy: [
       {
-        context: '/api',
-        target: 'http://localhost:8585/',
+        context: '/prod-api/metadata/api',
+        target: 'http://localhost:8585',
+        pathRewrite: {'^/prod-api/metadata/api': '/api'},
         changeOrigin: true,
       },
     ],
