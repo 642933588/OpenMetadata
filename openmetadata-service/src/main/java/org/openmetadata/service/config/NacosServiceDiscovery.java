@@ -5,6 +5,8 @@ import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
 import io.dropwizard.lifecycle.Managed;
+import org.springframework.cloud.commons.util.InetUtils;
+import org.springframework.cloud.commons.util.InetUtilsProperties;
 
 import java.net.InetAddress;
 import java.util.Properties;
@@ -32,14 +34,22 @@ public class NacosServiceDiscovery implements Managed {
 
     @Override
     public void start() throws Exception {
+
         // 注册服务
-        namingService.registerInstance("ruoyi-metadata", InetAddress.getLocalHost().getHostAddress(), 8585);
+        namingService.registerInstance("ruoyi-metadata", getIp(), 8585);
     }
 
     @Override
     public void stop() throws Exception {
         // 取消注册
-        namingService.deregisterInstance("ruoyi-metadata", InetAddress.getLocalHost().getHostAddress(), 8585);
+        namingService.deregisterInstance("ruoyi-metadata", getIp(), 8585);
+    }
+
+    private String getIp() {
+        InetUtilsProperties properties = new InetUtilsProperties();
+        InetUtils inetUtils = new InetUtils(properties);
+        String realIpAddress = inetUtils.findFirstNonLoopbackHostInfo().getIpAddress();
+        return realIpAddress;
     }
 }
 
