@@ -21,7 +21,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const BundleAnalyzerPlugin =
   require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-const outputPath = path.join(__dirname, 'dist/assets');
+const outputPath = path.join(__dirname, 'dist');
 
 module.exports = {
   // Production mode
@@ -35,7 +35,7 @@ module.exports = {
     path: outputPath,
     filename: 'openmetadata.[fullhash].js',
     chunkFilename: '[name].[fullhash].js',
-    publicPath: '/', // Ensures bundle is served from absolute path as opposed to relative
+    publicPath: '/metadata/', // Ensures bundle is served from absolute path as opposed to relative
   },
 
   // Loaders

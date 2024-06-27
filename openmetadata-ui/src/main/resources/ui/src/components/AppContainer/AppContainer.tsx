@@ -11,10 +11,8 @@
  *  limitations under the License.
  */
 import { Layout } from 'antd';
-import classNames from 'classnames';
 import { isEmpty } from 'lodash';
-import React, { useEffect, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useEffect } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { ROUTES } from '../../constants/constants';
 import { useApplicationStore } from '../../hooks/useApplicationStore';
@@ -23,18 +21,15 @@ import PageNotFound from '../../pages/PageNotFound/PageNotFound';
 import SignUpPage from '../../pages/SignUp/SignUpPage';
 import applicationRoutesClass from '../../utils/ApplicationRoutesClassBase';
 import Appbar from '../AppBar/Appbar';
-import LeftSidebar from '../MyData/LeftSidebar/LeftSidebar.component';
 import applicationsClassBase from '../Settings/Applications/AppDetails/ApplicationsClassBase';
 import './app-container.less';
 
 const AppContainer = () => {
-  const { i18n } = useTranslation();
-  const { Header, Sider, Content } = Layout;
+  const { Header, Content } = Layout;
   const { currentUser } = useApplicationStore();
   const { fetchDomainList } = useDomainStore();
   const AuthenticatedRouter = applicationRoutesClass.getRouteElements();
   const ApplicationExtras = applicationsClassBase.getApplicationExtension();
-  const isDirectionRTL = useMemo(() => i18n.dir() === 'rtl', [i18n]);
 
   useEffect(() => {
     if (currentUser?.id) {
@@ -51,13 +46,13 @@ const AppContainer = () => {
       <Route exact component={PageNotFound} path={ROUTES.NOT_FOUND} />
 
       <Layout className="app-container">
-        <Sider
-          className={classNames('left-sidebar-col', {
-            'left-sidebar-col-rtl': isDirectionRTL,
-          })}
-          width={60}>
-          <LeftSidebar />
-        </Sider>
+        {/*<Sider*/}
+        {/*  className={classNames('left-sidebar-col', {*/}
+        {/*    'left-sidebar-col-rtl': isDirectionRTL,*/}
+        {/*  })}*/}
+        {/*  width={60}>*/}
+        {/*  <LeftSidebar />*/}
+        {/*</Sider>*/}
         <Layout>
           <Header className="p-x-0">
             <Appbar />

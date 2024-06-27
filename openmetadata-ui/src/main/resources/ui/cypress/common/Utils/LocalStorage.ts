@@ -12,10 +12,7 @@
  */
 export const getToken = (data: Cypress.StorageByOrigin) => {
   try {
-    return (
-      JSON.parse((Object.values(data)[0]['om-session'] as string) ?? '{}')
-        ?.state?.oidcIdToken ?? ''
-    );
+    return Object.values(data)[0]['Authorization'] ?? '';
   } catch (error) {
     return '';
   }

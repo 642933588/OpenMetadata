@@ -19,11 +19,7 @@ import { getExplorePath, TOUR_SEARCH_TERM } from '../../constants/constants';
 import { useTourProvider } from '../../context/TourProvider/TourProvider';
 import { CurrentTourPageType } from '../../enums/tour.enum';
 import { useApplicationStore } from '../../hooks/useApplicationStore';
-import {
-  extractDetailsFromToken,
-  isProtectedRoute,
-  isTourRoute,
-} from '../../utils/AuthProvider.util';
+import { isProtectedRoute } from '../../utils/AuthProvider.util';
 import { addToRecentSearched } from '../../utils/CommonUtils';
 import searchClassBase from '../../utils/SearchClassBase';
 import NavBar from '../NavBar/NavBar';
@@ -36,8 +32,7 @@ const Appbar: React.FC = (): JSX.Element => {
   const { isTourOpen, updateTourPage, updateTourSearch, tourSearchValue } =
     useTourProvider();
 
-  const { isAuthenticated, searchCriteria, getOidcToken, trySilentSignIn } =
-    useApplicationStore();
+  const { isAuthenticated, searchCriteria } = useApplicationStore();
 
   const parsedQueryString = Qs.parse(
     location.search.startsWith('?')
@@ -115,17 +110,17 @@ const Appbar: React.FC = (): JSX.Element => {
 
   useEffect(() => {
     const handleDocumentVisibilityChange = () => {
-      if (
-        isProtectedRoute(location.pathname) &&
-        isTourRoute(location.pathname)
-      ) {
-        return;
-      }
-      const { isExpired } = extractDetailsFromToken(getOidcToken());
-      if (!document.hidden && isExpired) {
-        // force logout
-        trySilentSignIn(true);
-      }
+      // if (
+      //   isProtectedRoute(location.pathname) &&
+      // isTourRoute(location.pathname)
+      // ) {
+      //   return;
+      // }
+      // const { isExpired } = extractDetailsFromToken(getOidcToken());
+      // if (!document.hidden && isExpired) {
+      //   // force logout
+      //   trySilentSignIn(true);
+      // }
     };
 
     addEventListener('focus', handleDocumentVisibilityChange);

@@ -26,10 +26,10 @@ import {
 } from 'antd';
 import { AxiosError } from 'axios';
 import classNames from 'classnames';
-import { CookieStorage } from 'cookie-storage';
+// import { CookieStorage } from 'cookie-storage';
 import i18next from 'i18next';
-import { debounce, upperCase } from 'lodash';
-import { MenuInfo } from 'rc-menu/lib/interface';
+import { debounce } from 'lodash';
+// import { MenuInfo } from 'rc-menu/lib/interface';
 import React, {
   useCallback,
   useEffect,
@@ -43,13 +43,13 @@ import { ReactComponent as IconCloseCircleOutlined } from '../../assets/svg/clos
 import { ReactComponent as DropDownIcon } from '../../assets/svg/drop-down.svg';
 import { ReactComponent as IconBell } from '../../assets/svg/ic-alert-bell.svg';
 import { ReactComponent as DomainIcon } from '../../assets/svg/ic-domain.svg';
-import { ReactComponent as Help } from '../../assets/svg/ic-help.svg';
+// import { ReactComponent as Help } from '../../assets/svg/ic-help.svg';
 import { ReactComponent as IconSearch } from '../../assets/svg/search.svg';
 import {
   NOTIFICATION_READ_TIMER,
   SOCKET_EVENTS,
 } from '../../constants/constants';
-import { HELP_ITEMS_ENUM } from '../../constants/Navbar.constants';
+// import { HELP_ITEMS_ENUM } from '../../constants/Navbar.constants';
 import { useWebSocketConnector } from '../../context/WebSocketProvider/WebSocketProvider';
 import { EntityTabs, EntityType } from '../../enums/entity.enum';
 import { useApplicationStore } from '../../hooks/useApplicationStore';
@@ -68,11 +68,11 @@ import {
   prepareFeedLink,
 } from '../../utils/FeedUtils';
 import {
-  languageSelectOptions,
+  // languageSelectOptions,
   SupportedLocales,
 } from '../../utils/i18next/i18nextUtil';
 import { isCommandKeyPress, Keys } from '../../utils/KeyboardUtil';
-import { getHelpDropdownItems } from '../../utils/NavbarUtils';
+// import { getHelpDropdownItems } from '../../utils/NavbarUtils';
 import {
   inPageSearchOptions,
   isInPageSearchAllowed,
@@ -85,12 +85,12 @@ import Suggestions from '../AppBar/Suggestions';
 import CmdKIcon from '../common/CmdKIcon/CmdKIcon.component';
 import WhatsNewModal from '../Modals/WhatsNewModal/WhatsNewModal';
 import NotificationBox from '../NotificationBox/NotificationBox.component';
-import { UserProfileIcon } from '../Settings/Users/UserProfileIcon/UserProfileIcon.component';
+// import { UserProfileIcon } from '../Settings/Users/UserProfileIcon/UserProfileIcon.component';
 import './nav-bar.less';
 import { NavBarProps } from './NavBar.interface';
 import popupAlertsCardsClassBase from './PopupAlertClassBase';
 
-const cookieStorage = new CookieStorage();
+// const cookieStorage = new CookieStorage();
 
 const NavBar = ({
   searchValue,
@@ -146,11 +146,11 @@ const NavBar = ({
     });
   }, []);
 
-  const handleSupportClick = ({ key }: MenuInfo): void => {
-    if (key === HELP_ITEMS_ENUM.WHATS_NEW) {
-      setIsFeatureModalOpen(true);
-    }
-  };
+  // const handleSupportClick = ({ key }: MenuInfo): void => {
+  //   if (key === HELP_ITEMS_ENUM.WHATS_NEW) {
+  //     setIsFeatureModalOpen(true);
+  //   }
+  // };
 
   const entitiesSelect = useMemo(
     () => (
@@ -175,12 +175,12 @@ const NavBar = ({
     [searchCriteria]
   );
 
-  const language = useMemo(
-    () =>
-      (cookieStorage.getItem('i18next') as SupportedLocales) ||
-      SupportedLocales.English,
-    []
-  );
+  // const language = useMemo(
+  //   () =>
+  //     (cookieStorage.getItem('i18next') as SupportedLocales) ||
+  //     SupportedLocales.Chinese,
+  //   []
+  // );
 
   const { socket } = useWebSocketConnector();
 
@@ -342,10 +342,10 @@ const NavBar = ({
     refreshPage();
   }, []);
 
-  const handleLanguageChange = useCallback(({ key }) => {
-    i18next.changeLanguage(key);
-    refreshPage();
-  }, []);
+  // const handleLanguageChange = useCallback(({ key }) => {
+  //   i18next.changeLanguage(key);
+  //   refreshPage();
+  // }, []);
 
   const handleModalCancel = useCallback(() => setIsFeatureModalOpen(false), []);
 
@@ -353,6 +353,10 @@ const NavBar = ({
     history.replace({
       search: `?withinPageSearch=${text}`,
     });
+  }, []);
+
+  useEffect(() => {
+    i18next.changeLanguage(SupportedLocales.Chinese);
   }, []);
 
   return (
@@ -485,25 +489,25 @@ const NavBar = ({
             </Row>
           </Dropdown>
 
-          <Dropdown
-            className="cursor-pointer"
-            menu={{
-              items: languageSelectOptions,
-              onClick: handleLanguageChange,
-            }}
-            placement="bottomRight"
-            trigger={['click']}>
-            <Row gutter={2}>
-              <Col>
-                {upperCase(
-                  (language || SupportedLocales.English).split('-')[0]
-                )}
-              </Col>
-              <Col className="flex-center">
-                <DropDownIcon height={14} width={14} />
-              </Col>
-            </Row>
-          </Dropdown>
+          {/*<Dropdown*/}
+          {/*  className="cursor-pointer"*/}
+          {/*  menu={{*/}
+          {/*    items: languageSelectOptions,*/}
+          {/*    onClick: handleLanguageChange,*/}
+          {/*  }}*/}
+          {/*  placement="bottomRight"*/}
+          {/*  trigger={['click']}>*/}
+          {/*  <Row gutter={2}>*/}
+          {/*    <Col>*/}
+          {/*      {upperCase(*/}
+          {/*        (language || SupportedLocales.English).split('-')[0]*/}
+          {/*      )}*/}
+          {/*    </Col>*/}
+          {/*    <Col className="flex-center">*/}
+          {/*      <DropDownIcon height={14} width={14} />*/}
+          {/*    </Col>*/}
+          {/*  </Row>*/}
+          {/*</Dropdown>*/}
 
           <Dropdown
             destroyPopupOnHide
@@ -536,24 +540,24 @@ const NavBar = ({
             </Tooltip>
           </Dropdown>
 
-          <Dropdown
-            menu={{
-              items: getHelpDropdownItems(version),
-              onClick: handleSupportClick,
-            }}
-            overlayStyle={{ width: 175 }}
-            placement="bottomRight"
-            trigger={['click']}>
-            <Tooltip placement="top" title={t('label.need-help')}>
-              <Icon
-                className="align-middle"
-                component={Help}
-                style={{ fontSize: '24px' }}
-              />
-            </Tooltip>
-          </Dropdown>
+          {/*<Dropdown*/}
+          {/*  menu={{*/}
+          {/*    items: getHelpDropdownItems(version),*/}
+          {/*    onClick: handleSupportClick,*/}
+          {/*  }}*/}
+          {/*  overlayStyle={{ width: 175 }}*/}
+          {/*  placement="bottomRight"*/}
+          {/*  trigger={['click']}>*/}
+          {/*  <Tooltip placement="top" title={t('label.need-help')}>*/}
+          {/*    <Icon*/}
+          {/*      className="align-middle"*/}
+          {/*      component={Help}*/}
+          {/*      style={{ fontSize: '24px' }}*/}
+          {/*    />*/}
+          {/*  </Tooltip>*/}
+          {/*</Dropdown>*/}
 
-          <UserProfileIcon />
+          {/*<UserProfileIcon />*/}
         </Space>
       </div>
       <WhatsNewModal

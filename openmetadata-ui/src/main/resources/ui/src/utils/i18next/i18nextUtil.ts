@@ -27,7 +27,7 @@ import zhCN from '../../locale/languages/zh-cn.json';
 export enum SupportedLocales {
   English = 'en-US',
   Français = 'fr-FR',
-  简体中文 = 'zh-CN',
+  Chinese = 'zh-CN',
   日本語 = 'ja-JP',
   Português = 'pt-BR',
   Español = 'es-ES',

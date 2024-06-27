@@ -74,6 +74,7 @@ import {
   matchUserDetails,
 } from '../../../utils/UserDataUtils';
 import { resetWebAnalyticSession } from '../../../utils/WebAnalyticsUtils';
+import { getOidcToken } from '../../../utils/LocalStorageUtils';
 import Loader from '../../common/Loader/Loader';
 import Auth0Authenticator from '../AppAuthenticators/Auth0Authenticator';
 import BasicAuthAuthenticator from '../AppAuthenticators/BasicAuthAuthenticator';
@@ -117,7 +118,7 @@ export const AuthProvider = ({
     setJwtPrincipalClaims,
     removeRefreshToken,
     removeOidcToken,
-    getOidcToken,
+    // getOidcToken,
     getRefreshToken,
     isApplicationLoading,
     setApplicationLoading,
@@ -578,6 +579,26 @@ export const AuthProvider = ({
     }
   };
 
+  const fetchUserInfo =async () => {
+    setApplicationLoading(true);
+    setIsAuthenticated(true);
+    const fields =
+        authConfig?.provider === AuthProviderEnum.Basic
+            ? userAPIQueryFields + ',' + isEmailVerifyField
+            : userAPIQueryFields;
+    try {
+      debugger;
+      const res = await getLoggedInUser({ fields });
+      setCurrentUser(res);
+    } catch (error) {
+      const err = error as AxiosError;
+      console.error(err);
+    } finally {
+      setApplicationLoading(false);
+    }
+
+  }
+
   const getProtectedApp = () => {
     // Show loader if application in loading state
     const childElement = isApplicationLoading ? (
@@ -680,7 +701,8 @@ export const AuthProvider = ({
 
   useEffect(() => {
     fetchAuthConfig();
-    startTokenExpiryTimer();
+    fetchUserInfo();
+    // startTokenExpiryTimer();
     initializeAxiosInterceptors();
 
     setHelperFunctionsRef({

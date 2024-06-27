@@ -27,6 +27,7 @@ import { getOidcToken } from '../utils/LocalStorageUtils';
 import { getThemeConfig } from '../utils/ThemeUtils';
 
 export const OM_SESSION_KEY = 'om-session';
+export const AUTHORIZATION = 'Authorization';
 
 export const useApplicationStore = create<ApplicationStore>()(
   persist(
@@ -46,7 +47,7 @@ export const useApplicationStore = create<ApplicationStore>()(
       userProfilePics: {},
       cachedEntityData: {},
       selectedPersona: {} as EntityReference,
-      oidcIdToken: '',
+      oidcIdToken: getOidcToken(),
       refreshTokenKey: '',
       searchCriteria: '',
 
