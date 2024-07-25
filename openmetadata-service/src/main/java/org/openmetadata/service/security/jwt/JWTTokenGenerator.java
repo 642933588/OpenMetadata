@@ -31,10 +31,11 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+import com.ruoyi.common.core.constant.SecurityConstants;
+import com.ruoyi.common.core.utils.JwtUtils;
+import io.jsonwebtoken.Claims;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.openmetadata.schema.api.security.jwt.JWTTokenConfiguration;
@@ -142,18 +143,26 @@ public class JWTTokenGenerator {
       }
       JWTAuthMechanism jwtAuthMechanism = new JWTAuthMechanism().withJWTTokenExpiry(expiry);
       Algorithm algorithm = Algorithm.RSA256(null, privateKey);
-      String token =
-          JWT.create()
-              .withIssuer(issuer)
-              .withKeyId(kid)
-              .withClaim(SUBJECT_CLAIM, userName)
-              .withClaim(ROLES_CLAIM, roles.stream().toList())
-              .withClaim(EMAIL_CLAIM, email)
-              .withClaim(IS_BOT_CLAIM, isBot)
-              .withClaim(TOKEN_TYPE, tokenType.value())
-              .withIssuedAt(new Date(System.currentTimeMillis()))
-              .withExpiresAt(expires)
-              .sign(algorithm);
+//      String token =
+//          JWT.create()
+//              .withIssuer(issuer)
+//              .withKeyId(kid)
+//              .withClaim(SUBJECT_CLAIM, userName)
+//              .withClaim(ROLES_CLAIM, roles.stream().toList())
+//              .withClaim(EMAIL_CLAIM, email)
+//              .withClaim(IS_BOT_CLAIM, isBot)
+//              .withClaim(TOKEN_TYPE, tokenType.value())
+//              .withIssuedAt(new Date(System.currentTimeMillis()))
+//              .withExpiresAt(expires)
+//              .sign(algorithm);
+      Map<String, Object> claims = new HashMap<>();
+      claims.put(SUBJECT_CLAIM, userName);
+      claims.put(SecurityConstants.DETAILS_USERNAME, userName);
+      claims.put(ROLES_CLAIM, roles.stream().toList());
+      claims.put(EMAIL_CLAIM, email);
+      claims.put(IS_BOT_CLAIM, isBot);
+      claims.put(TOKEN_TYPE, tokenType.value());
+      String token = JwtUtils.createToken(claims,expires);
       jwtAuthMechanism.setJWTToken(token);
       jwtAuthMechanism.setJWTTokenExpiresAt(expires != null ? expires.getTime() : null);
       return jwtAuthMechanism;
@@ -199,19 +208,22 @@ public class JWTTokenGenerator {
   }
 
   public Date getTokenExpiryFromJWT(String token) {
-    DecodedJWT jwt;
-    try {
-      jwt = JWT.decode(token);
-    } catch (JWTDecodeException e) {
-      throw new AuthenticationException("Invalid token", e);
-    }
-
-    // Check if expired
-    // If expiresAt is set to null, treat it as never expiring token
-    if (jwt.getExpiresAt() == null) {
-      throw new AuthenticationException("Invalid Token, Expiry not present!");
-    }
-
-    return jwt.getExpiresAt();
+    Claims claims = JwtUtils.parseToken(token);
+    Date expiration = claims.getExpiration();
+    return expiration;
+//    DecodedJWT jwt;
+//    try {
+//      jwt = JWT.decode(token);
+//    } catch (JWTDecodeException e) {
+//      throw new AuthenticationException("Invalid token", e);
+//    }
+//
+//    // Check if expired
+//    // If expiresAt is set to null, treat it as never expiring token
+//    if (jwt.getExpiresAt() == null) {
+//      throw new AuthenticationException("Invalid Token, Expiry not present!");
+//    }
+//
+//    return jwt.getExpiresAt();
   }
 }

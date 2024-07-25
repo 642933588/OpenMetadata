@@ -20,4 +20,4 @@ workflowConfig:
     hostPort: http://localhost:8585/api
     authProvider: openmetadata
     securityConfig:
-      jwtToken: "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX2tleSI6IjEyYTk5NmZlLWFlNjYtNGE3Ni1hZTE3LWIyMTk5MGNlYWIwMyIsInVzZXJuYW1lIjoiYWRtaW4ifQ.xbsTbCSNwhpHMYLvBvFRSpEXVaps2FXnp38xT_zwP3rDazISbHCewt4u1T25Ujx3ZCyiCv4uTSuI3rn4s7QYPw"
+      jwtToken: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2NDI5MzM1ODgiLCJpc0JvdCI6dHJ1ZSwicm9sZXMiOltdLCJ0b2tlblR5cGUiOiJCT1QiLCJlbWFpbCI6IjY0MjkzMzU4OEBxcS5jb20iLCJ1c2VybmFtZSI6IjY0MjkzMzU4OCJ9.sqxUSV8ZxRNoxOMo2DyJEKufOA5GDqQneiA2f-QFYU1cVXsME8MQ-hxBIy0Y7_h0TFEyEat3jT4cI-fggw3eRg"
