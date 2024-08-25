@@ -36,13 +36,13 @@ public class NacosServiceDiscovery implements Managed {
     public void start() throws Exception {
 
         // 注册服务
-        namingService.registerInstance("ruoyi-metadata", getIp(), 8585);
+        namingService.registerInstance("jiron-metadata", getIp(), 8585);
     }
 
     @Override
     public void stop() throws Exception {
         // 取消注册
-        namingService.deregisterInstance("ruoyi-metadata", getIp(), 8585);
+        namingService.deregisterInstance("jiron-metadata", getIp(), 8585);
     }
 
     private String getIp() {

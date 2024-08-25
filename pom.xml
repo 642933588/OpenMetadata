@@ -33,7 +33,7 @@
     <module>common</module>
     <module>openmetadata-shaded-deps</module>
     <module>openmetadata-service</module>
-    <module>openmetadata-ui</module>
+<!--    <module>openmetadata-ui</module>-->
     <module>openmetadata-dist</module>
     <module>openmetadata-clients</module>
   </modules>
@@ -73,7 +73,7 @@
   </distributionManagement>
 
   <properties>
-    <ruoyi.version>3.6.4</ruoyi.version>
+    <jiron.version>1.0.0</jiron.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <mockito.version>5.9.0</mockito.version>
     <!-- Upgrading slf4j causes dropwizard issues -->
@@ -158,9 +158,9 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>com.ruoyi</groupId>
-        <artifactId>ruoyi-common-security</artifactId>
-        <version>${ruoyi.version}</version>
+        <groupId>com.jiron</groupId>
+        <artifactId>jiron-common-security</artifactId>
+        <version>${jiron.version}</version>
       </dependency>
       <dependency>
         <groupId>com.alibaba.nacos</groupId>

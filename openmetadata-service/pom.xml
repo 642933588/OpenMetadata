@@ -39,8 +39,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.ruoyi</groupId>
-      <artifactId>ruoyi-common-security</artifactId>
+      <groupId>com.jiron</groupId>
+      <artifactId>jiron-common-security</artifactId>
     </dependency>
     <dependency>
       <groupId>com.alibaba.nacos</groupId>
