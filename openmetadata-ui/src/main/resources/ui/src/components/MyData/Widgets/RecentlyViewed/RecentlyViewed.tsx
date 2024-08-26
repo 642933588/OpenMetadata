@@ -115,13 +115,13 @@ const RecentlyViewed = ({
                 <Typography.Paragraph>
                   {t('message.no-recently-viewed-date')}
                 </Typography.Paragraph>
-                <a
-                  className="link-title"
-                  href={RECENTLY_VIEWED}
-                  rel="noreferrer"
-                  target="_blank">
-                  {t('label.learn-more')}
-                </a>
+                {/*<a*/}
+                {/*  className="link-title"*/}
+                {/*  href={RECENTLY_VIEWED}*/}
+                {/*  rel="noreferrer"*/}
+                {/*  target="_blank">*/}
+                {/*  {t('label.learn-more')}*/}
+                {/*</a>*/}
               </ErrorPlaceHolder>
             </div>
           ) : (
