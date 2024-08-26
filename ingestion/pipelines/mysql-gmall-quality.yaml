@@ -1,0 +1,38 @@
+source:
+  type: TestSuite
+  serviceName: MyAwesomeTestSuite
+  sourceConfig:
+    config:
+      type: TestSuite
+      entityFullyQualifiedName: mysql_test.default.gmall.activity_info
+#     testCases: ["run_only_this_test_case"] # Optional, if not provided all tests will be executed
+
+processor:
+  type: "orm-test-runner"
+  config:
+    forceUpdate: false
+    testCases:
+      - name: column_value_length_tagFQN
+        testDefinitionName: columnValueLengthsToBeBetween
+        columnName: tagFQN
+        parameterValues:
+          - name: minLength
+            value: 10
+          - name: maxLength
+            value: 25
+      - name: table_row_count_test
+        testDefinitionName: tableRowCountToEqual
+        parameterValues:
+          - name: value
+            value: 10
+
+sink:
+  type: metadata-rest
+  config: {}
+workflowConfig:
+  openMetadataServerConfig:
+    hostPort: "http://localhost:8585/api"
+    authProvider: openmetadata
+    securityConfig:
+      jwtToken: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2NDI5MzM1ODgiLCJpc0JvdCI6dHJ1ZSwicm9sZXMiOltdLCJ0b2tlblR5cGUiOiJCT1QiLCJlbWFpbCI6IjY0MjkzMzU4OEBxcS5jb20iLCJ1c2VybmFtZSI6IjY0MjkzMzU4OCJ9.sqxUSV8ZxRNoxOMo2DyJEKufOA5GDqQneiA2f-QFYU1cVXsME8MQ-hxBIy0Y7_h0TFEyEat3jT4cI-fggw3eRg"
+

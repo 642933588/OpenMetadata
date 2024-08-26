@@ -1,0 +1,57 @@
+source:
+  type: mysql
+  serviceName: mysql_test
+  serviceConnection:
+    config:
+      type: Mysql
+      username: root
+      authType:
+        password: longshine@2023
+      hostPort: 192.168.3.22:3306
+      databaseSchema:
+      # connectionOptions:
+      #   key: value
+      # connectionArguments:
+      #   key: value
+  sourceConfig:
+    config:
+      type: DatabaseMetadata
+      markDeletedTables: true
+      includeTables: true
+      includeViews: true
+      # includeTags: true
+      # databaseFilterPattern:
+      #   includes:
+      #     - database1
+      #     - database2
+      #   excludes:
+      #     - database3
+      #     - database4
+      schemaFilterPattern:
+        includes:
+          - gmall
+      #   excludes:
+      #     - schema3
+      #     - schema4
+      # tableFilterPattern:
+      #   includes:
+      #     - table1
+      #     - table2
+      #   excludes:
+      #     - table3
+      #     - table4
+sink:
+  type: metadata-rest
+  config: {}
+workflowConfig:
+  loggerLevel: INFO  # DEBUG, INFO, WARNING or ERROR
+  openMetadataServerConfig:
+    hostPort: "http://localhost:8585/api"
+    authProvider: openmetadata
+    securityConfig:
+      jwtToken: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2NDI5MzM1ODgiLCJpc0JvdCI6dHJ1ZSwicm9sZXMiOltdLCJ0b2tlblR5cGUiOiJCT1QiLCJlbWFpbCI6IjY0MjkzMzU4OEBxcS5jb20iLCJ1c2VybmFtZSI6IjY0MjkzMzU4OCJ9.sqxUSV8ZxRNoxOMo2DyJEKufOA5GDqQneiA2f-QFYU1cVXsME8MQ-hxBIy0Y7_h0TFEyEat3jT4cI-fggw3eRg"
+    ## If SSL, fill the following
+    # verifySSL: validate  # or ignore
+    # sslConfig:
+    #   certificatePath: /local/path/to/certificate
+
