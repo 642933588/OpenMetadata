@@ -594,7 +594,9 @@ public class UserResource extends EntityResource<User, UserRepository> {
       // basic auth doesn't allow duplicate emails, since username part of the email is used as
       // login name
       validateEmailAlreadyExists(create.getEmail());
-      user.setName(user.getEmail().split("@")[0]);
+      if(StringUtils.isBlank(user.getName())){
+          user.setName(user.getEmail().split("@")[0]);
+      }
       if (Boolean.FALSE.equals(create.getIsBot())
           && create.getCreatePasswordType() == ADMIN_CREATE) {
         addAuthMechanismToUser(user, create);
