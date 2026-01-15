@@ -10,7 +10,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import { expect } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import { get } from 'lodash';
 import { DashboardClass } from '../../support/entity/DashboardClass';
 import { DashboardDataModelClass } from '../../support/entity/DashboardDataModelClass';
@@ -180,9 +180,9 @@ test.describe('Impact Analysis', () => {
     await afterAction();
   });
 
-  test.beforeEach(async ({ page }) => {
+  async function setupImpactAnalysis(page: Page, entity = table) {
     await redirectToHomePage(page);
-    await table.visitEntityPage(page);
+    await entity.visitEntityPage(page);
     await visitLineageTab(page);
     const lineageResponse = page.waitForResponse(
       `/api/v1/lineage/getLineageByEntityCount?*`
@@ -190,14 +190,18 @@ test.describe('Impact Analysis', () => {
     await page.getByRole('button', { name: 'Impact Analysis' }).click();
     await lineageResponse;
     await waitForAllLoadersToDisappear(page);
-  });
+  }
 
   test('validate upstream/ downstream counts', async ({ page }) => {
+    await setupImpactAnalysis(page);
+
     expect(page.getByRole('button', { name: 'Downstream 5' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Upstream 1' })).toBeVisible();
   });
 
   test('Verify Downstream connections', async ({ page }) => {
+    await setupImpactAnalysis(page);
+
     const tableDownstreamNodes = [
       pipeline.entityResponseData.displayName,
       dataModel.entityResponseData.displayName,
@@ -234,6 +238,8 @@ test.describe('Impact Analysis', () => {
 
   test('Verify Upstream connections', async ({ page }) => {
     // Verify Dashboard is visible in Impact Analysis for Upstream
+    await setupImpactAnalysis(page);
+
     await page.getByText('Upstream').click();
 
     await expect(
@@ -258,6 +264,8 @@ test.describe('Impact Analysis', () => {
   test('verify owner filter for Asset level impact analysis', async ({
     page,
   }) => {
+    await setupImpactAnalysis(page);
+
     await page.getByRole('button', { name: 'Filters' }).click();
     await page.getByTestId('search-dropdown-Owners').click();
 
@@ -282,6 +290,8 @@ test.describe('Impact Analysis', () => {
   test.fixme(
     'verify domain for Asset level impact analysis',
     async ({ page }) => {
+      await setupImpactAnalysis(page);
+
       await page.getByRole('button', { name: 'Filters' }).click();
       await page.getByTestId('search-dropdown-Domains').click();
 
@@ -304,6 +314,8 @@ test.describe('Impact Analysis', () => {
   );
 
   test('verify tier for Asset level impact analysis', async ({ page }) => {
+    await setupImpactAnalysis(page);
+
     await page.getByRole('button', { name: 'Filters' }).click();
     await page.getByTestId('search-dropdown-Tier').click();
 
@@ -329,6 +341,8 @@ test.describe('Impact Analysis', () => {
   test('Verify upstream/downstream counts for column level', async ({
     page,
   }) => {
+    await setupImpactAnalysis(page);
+
     await page.getByRole('button', { name: 'Impact On: Table' }).click();
     const columnLineageResponse = page.waitForResponse(
       `/api/v1/lineage/getLineage?fqn=${table.entityResponseData.fullyQualifiedName}&type=table&upstreamDepth=2&downstreamDepth=2&includeDeleted=false&size=50`
@@ -361,6 +375,8 @@ test.describe('Impact Analysis', () => {
   });
 
   test('Verify column level downstream connections', async ({ page }) => {
+    await setupImpactAnalysis(page);
+
     await page.getByRole('button', { name: 'Impact On: Table' }).click();
     const columnLineageResponse = page.waitForResponse(
       `/api/v1/lineage/getLineage?fqn=${table.entityResponseData.fullyQualifiedName}&type=table&upstreamDepth=2&downstreamDepth=2&includeDeleted=false&size=50`
@@ -426,9 +442,7 @@ test.describe('Impact Analysis', () => {
   });
 
   test('Verify column level upstream connections', async ({ page }) => {
-    await table2.visitEntityPage(page);
-    await visitLineageTab(page);
-    await page.getByRole('button', { name: 'Impact Analysis' }).click();
+    await setupImpactAnalysis(page, table2);
 
     await page.getByRole('button', { name: 'Impact On: Table' }).click();
     const columnLineageResponse = page.waitForResponse(
